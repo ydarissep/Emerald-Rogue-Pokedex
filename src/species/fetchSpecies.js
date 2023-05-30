@@ -66,7 +66,10 @@ async function getTutorLearnsets(species){
     const rawTutorLearnsets = await fetch(`https://raw.githubusercontent.com/${repo}/src/data/pokemon/tutor_learnsets.h`)
     const tutorLearnsets = await rawTutorLearnsets.text()
 
-    return regexTutorLearnsets(tutorLearnsets, species)
+    const rawPresetMons = await fetch(`https://raw.githubusercontent.com/${repo}/src/data/rogue_presetmons.h`)
+    const presetMons = await rawPresetMons.text()
+
+    return regexTutorLearnsets(tutorLearnsets, presetMons, species)
 }
 
 async function getSprite(species){

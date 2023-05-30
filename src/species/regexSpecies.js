@@ -630,7 +630,16 @@ function regexSprite(textSprite, conversionTable, species){
 
 
 
-function regexTutorLearnsets(tutorLearnsets, species){
+function regexTutorLearnsets(tutorLearnsets, presetMons, species){
+    const allTMHM = new Set()
+    for(const moveset of Object.values(species)){
+        moveset["TMHMLearnsets"].forEach(
+            move => allTMHM.add(move[0])
+        )
+        if(allTMHM.size >= 58)
+            break
+    }
+
     const lines = tutorLearnsets.split("\n")
     let name = null
 
@@ -648,6 +657,36 @@ function regexTutorLearnsets(tutorLearnsets, species){
             species[name]["tutorLearnsets"].push(move)
         }
     })
+
+    const lines2 = presetMons.split("\n")
+    name = null
+
+    lines2.forEach(line => {
+        const matchSpecies = line.match(/u16 sRoguePresets_(\w+)_Moveset/i)
+        if(matchSpecies !== null){
+            // Sort the previous poke's list (just for looks).
+            if(name !== null) species[name]["tutorLearnsets"].sort()
+            name = "SPECIES_" + matchSpecies[1]
+        }
+
+
+        const matchPresetMove = line.match(/^\t(MOVE_\w+)/i)
+        if(matchPresetMove !== null && name in species){
+            let move = matchPresetMove[1]
+
+            // Only add the preset-move if we can't already learn it
+            // and there's no machine for it.
+            if(!species[name]["levelUpLearnsets"].some(levelMove => levelMove[0] == move)
+            && !allTMHM.has(move)
+            && !species[name]["tutorLearnsets"].includes(move)){
+
+                species[name]["tutorLearnsets"].push(move)
+            }
+        }
+    })
+
+    // Sort the final poke's list.
+    species[name]["tutorLearnsets"].sort()
 
     return altFormsLearnsets(species, "forms", "tutorLearnsets")
 }
