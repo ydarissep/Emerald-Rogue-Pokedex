@@ -19,8 +19,8 @@ fetch('https://raw.githubusercontent.com/ydarissep/dex-core/main/index.html').th
         return response.text()
     }).then(async text => {
         await eval.call(window,text)
-        document.getElementById("onlyShowChangedPokemonCheckbox").parentElement.remove()
-        document.getElementById("patchnoteModeCheckbox").parentElement.remove()
+        document.getElementById("changelogMode").remove()
+        document.getElementById("onlyShowChangedPokemon").remove()
     }).catch(error => {
         console.warn(error)
     })    
