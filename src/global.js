@@ -1,5 +1,5 @@
 window.repo = "Pokabbie/pokeemerald-rogue/expansion"
-window.checkUpdate = "4 ER"
+window.checkUpdate = "5 ER"
 
 
 fetch('https://raw.githubusercontent.com/ydarissep/dex-core/main/index.html').then(async response => {
